@@ -1,4 +1,4 @@
-namespace Silver;
+namespace Silver.Syntax;
 
 public class UnterminatedStringException : Exception
 {

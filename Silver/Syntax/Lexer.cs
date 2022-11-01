@@ -1,4 +1,4 @@
-namespace Silver;
+namespace Silver.Syntax;
 
 /// <summary>
 /// Class for performing lexical analysis.

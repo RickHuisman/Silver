@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Tests;
+namespace Silver.Test;
 
 public static class TestHelper
 {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Tests;
+using Silver.Syntax;
+using Silver.Syntax.Ast;
 
 namespace Silver.Test;
 

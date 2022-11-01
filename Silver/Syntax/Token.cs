@@ -1,4 +1,4 @@
-namespace Silver;
+namespace Silver.Syntax;
 
 public record Token(TokenType Type, string Source);
 

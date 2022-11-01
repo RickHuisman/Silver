@@ -1,4 +1,4 @@
-namespace Silver;
+namespace Silver.Syntax.Ast;
 
 public interface ILiteralExpression : IExpressionKind
 {

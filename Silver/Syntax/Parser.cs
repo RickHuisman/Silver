@@ -1,4 +1,6 @@
-namespace Silver;
+using Silver.Syntax.Ast;
+
+namespace Silver.Syntax;
 
 public partial class Parser
 {
