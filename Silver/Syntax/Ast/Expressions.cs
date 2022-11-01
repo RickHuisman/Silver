@@ -1,31 +1,59 @@
+using Silver.VM;
+
 namespace Silver.Syntax.Ast;
 
 public interface IExpressionKind
 {
+    public void Compile(ref Compiler.Compiler compiler);
 }
 
-public record ExpressionStatement(IExpressionKind Expr) : IExpressionKind;
+public record ExpressionStatement(IExpressionKind Expr) : IExpressionKind
+{
+    public void Compile(ref Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
+}
 
-public record AssignExpression(IExpressionKind Variable, IExpressionKind Value) : IExpressionKind;
+public record AssignExpression(IExpressionKind Variable, IExpressionKind Value) : IExpressionKind
+{
+    public void Compile(ref Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
+}
 
-public record Identifier(string Name) : IExpressionKind;
+public record Identifier(string Name) : IExpressionKind
+{
+    public void Compile(ref Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
+}
 
 public class BinaryExpression : IExpressionKind
 {
     public BinaryOperator Operator;
-    public IExpressionKind Lhs;
-    public IExpressionKind Rhs;
+    public IExpressionKind Left;
+    public IExpressionKind Right;
 
-    public BinaryExpression(BinaryOperator op, IExpressionKind lhs, IExpressionKind rhs)
+    public BinaryExpression(BinaryOperator op, IExpressionKind left, IExpressionKind right)
     {
         Operator = op;
-        Lhs = lhs;
-        Rhs = rhs;
+        Left = left;
+        Right = right;
     }
 
     public override string ToString()
     {
-        return $"Lhs: {Lhs} - Rhs: {Rhs} - Operator: {Operator}";
+        return $"Left: {Left} - Right: {Right} - Operator: {Operator}";
+    }
+
+    public void Compile(ref Compiler.Compiler compiler)
+    {
+        Left.Compile(ref compiler);
+        Left.Compile(ref compiler);
+        compiler.Emit(Opcode.Add);
     }
 }
 
@@ -41,16 +69,6 @@ public enum BinaryOperator
     Plus,
     Divide,
     Multiply,
-}
-
-public class GroupingExpression : IExpressionKind
-{
-    public IExpressionKind Expr;
-
-    public GroupingExpression(IExpressionKind expr)
-    {
-        Expr = expr;
-    }
 }
 
 public enum UnaryOperator
@@ -74,6 +92,11 @@ public class UnaryExpression : IExpressionKind
     {
         return $"Node: {Unary} - Operator: {Operator}";
     }
+
+    public void Compile(ref Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class SetExpression : IExpressionKind
@@ -88,6 +111,11 @@ public class SetExpression : IExpressionKind
         Expr = expr;
         Value = value;
     }
+
+    public void Compile(ref Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class GetExpression : IExpressionKind
@@ -99,5 +127,10 @@ public class GetExpression : IExpressionKind
     {
         Name = name;
         Expr = expr;
+    }
+
+    public void Compile(ref Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
     }
 }

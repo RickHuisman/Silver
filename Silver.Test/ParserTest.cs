@@ -7,6 +7,12 @@ namespace Silver.Test;
 
 public class ParserTest
 {
+    private static IList<IExpressionKind> LexAndParse(string source)
+    {
+        var tokens = Lexer.Lex(source);
+        return Parser.Parse(tokens);
+    }
+
     [Test]
     public void Parse_Binary_ReturnsExpression()
     {
@@ -20,7 +26,7 @@ public class ParserTest
             )
         };
 
-        var actual = Parser.Parse(input);
+        var actual = LexAndParse(input);
         TestHelper.AreEqual(expected, actual);
     }
 
@@ -36,7 +42,7 @@ public class ParserTest
             )
         };
 
-        var actual = Parser.Parse(input);
+        var actual = LexAndParse(input);
         TestHelper.AreEqual(expected, actual);
     }
 
@@ -49,7 +55,7 @@ public class ParserTest
             new Identifier("x"),
         };
 
-        var actual = Parser.Parse(input);
+        var actual = LexAndParse(input);
         TestHelper.AreEqual(expected, actual);
     }
 
@@ -65,7 +71,7 @@ public class ParserTest
             )
         };
 
-        var actual = Parser.Parse(input);
+        var actual = LexAndParse(input);
         TestHelper.AreEqual(expected, actual);
     }
 }

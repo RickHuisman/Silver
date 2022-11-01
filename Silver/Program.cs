@@ -1,9 +1,6 @@
-﻿using Silver.Syntax;
+﻿using Silver.Compiler;
 
 const string source = "10 + 2";
-var tokens = Lexer.Lex(source);
+var bytecode = Compiler.Compile(source);
 
-foreach (var t in tokens)
-{
-    Console.WriteLine(t);
-}
+Console.WriteLine(bytecode);

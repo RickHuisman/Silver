@@ -6,9 +6,9 @@ public partial class Parser
 {
     private static List<Token> _tokens;
 
-    public static List<IExpressionKind> Parse(string source)
+    public static List<IExpressionKind> Parse(List<Token> tokens)
     {
-        _tokens = Lexer.Lex(source);
+        _tokens = tokens;
         _tokens.Reverse();
 
         var expressions = new List<IExpressionKind>();
