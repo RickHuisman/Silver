@@ -4,30 +4,17 @@ public interface IExpressionKind
 {
 }
 
-public class Expression
-{
-    public IExpressionKind Node;
+public record ExpressionStatement(IExpressionKind Expr) : IExpressionKind;
 
-    public Expression(IExpressionKind node)
-    {
-        Node = node;
-    }
-
-    public override string ToString()
-    {
-        return $"({Node})";
-    }
-}
-
-public record ExpressionStatement(Expression Expr) : IExpressionKind;
+// public record VarStatement(Variable Variable, Expression Expr) : IExpressionKind; TODO
 
 public class BinaryExpression : IExpressionKind
 {
     public BinaryOperator Operator;
-    public Expression Lhs;
-    public Expression Rhs;
+    public IExpressionKind Lhs;
+    public IExpressionKind Rhs;
 
-    public BinaryExpression(BinaryOperator op, Expression lhs, Expression rhs)
+    public BinaryExpression(BinaryOperator op, IExpressionKind lhs, IExpressionKind rhs)
     {
         Operator = op;
         Lhs = lhs;
@@ -56,9 +43,9 @@ public enum BinaryOperator
 
 public class GroupingExpression : IExpressionKind
 {
-    public Expression Expr;
+    public IExpressionKind Expr;
 
-    public GroupingExpression(Expression expr)
+    public GroupingExpression(IExpressionKind expr)
     {
         Expr = expr;
     }
@@ -73,9 +60,9 @@ public enum UnaryOperator
 public class UnaryExpression : IExpressionKind
 {
     public UnaryOperator Operator;
-    public Expression Unary;
+    public IExpressionKind Unary;
 
-    public UnaryExpression(UnaryOperator op, Expression unary)
+    public UnaryExpression(UnaryOperator op, IExpressionKind unary)
     {
         Operator = op;
         Unary = unary;
@@ -90,10 +77,10 @@ public class UnaryExpression : IExpressionKind
 public class SetExpression : IExpressionKind
 {
     public string Name { get; }
-    public Expression Expr { get; set; }
-    public Expression Value { get; } // TODO Name
+    public IExpressionKind Expr { get; set; }
+    public IExpressionKind Value { get; } // TODO Name
 
-    public SetExpression(string name, Expression expr, Expression value)
+    public SetExpression(string name, IExpressionKind expr, IExpressionKind value)
     {
         Name = name;
         Expr = expr;
@@ -104,9 +91,9 @@ public class SetExpression : IExpressionKind
 public class GetExpression : IExpressionKind
 {
     public string Name { get; }
-    public Expression Expr { get; set; }
+    public IExpressionKind Expr { get; set; }
 
-    public GetExpression(string name, Expression expr)
+    public GetExpression(string name, IExpressionKind expr)
     {
         Name = name;
         Expr = expr;

@@ -24,7 +24,7 @@ public static class ParserRules
             new ParseRule(TokenType.Comma, null, null, Precedence.None),
             new ParseRule(TokenType.Number, Parser.Number, null, Precedence.None),
             new ParseRule(TokenType.Plus, null, Parser.Binary, Precedence.Term),
-            // new ParseRule(TokenType.Minus, Parser.Unary, Parser.Binary, Precedence.Comparison),
+            new ParseRule(TokenType.Minus, Parser.Unary, Parser.Binary, Precedence.Comparison),
             new ParseRule(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
             new ParseRule(TokenType.Star, null, Parser.Binary, Precedence.Factor),
             new ParseRule(TokenType.Semicolon, null, null, Precedence.None),
@@ -37,13 +37,13 @@ public class ParseRule
 {
     public TokenType Type;
     public Func<Token, IExpressionKind>? Prefix;
-    public Func<Token, IExpressionKind>? Infix;
+    public Func<Token, IExpressionKind, IExpressionKind>? Infix;
     public Precedence Precedence;
 
     public ParseRule(
         TokenType type,
         Func<Token, IExpressionKind>? prefix,
-        Func<Token, IExpressionKind>? infix,
+        Func<Token, IExpressionKind, IExpressionKind>? infix,
         Precedence precedence)
     {
         Type = type;

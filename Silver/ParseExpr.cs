@@ -13,19 +13,20 @@ public partial class Parser
 
     private static ExpressionStatement ExpressionStatement()
     {
-        var expr = ParsePrecedence(Precedence.Assignment);
+        var expr = Expression();
         return new ExpressionStatement(expr);
     }
 
-    private static Expression ParsePrecedence(Precedence precedence)
+    private static IExpressionKind Expression()
+    {
+        return ParsePrecedence(Precedence.Assignment);
+    }
+
+    private static IExpressionKind ParsePrecedence(Precedence precedence)
     {
         var lhsToken = Next();
-        var prefixRule = ParserRules.GetRule(lhsToken.Type).Prefix; // TODO Previous ???
-
-        if (prefixRule == null)
-        {
-            throw new Exception("Expected expression");
-        }
+        var prefixRule = ParserRules.GetRule(lhsToken.Type).Prefix;
+        if (prefixRule == null) throw new Exception("Expected expression");
 
         var expr = prefixRule(lhsToken);
 
@@ -33,20 +34,11 @@ public partial class Parser
         {
             var rhsToken = Next();
             var infixRule = ParserRules.GetRule(rhsToken.Type).Infix;
-            var infixExpr = infixRule(rhsToken);
-
-            switch (infixExpr)
-            {
-                case BinaryExpression binary2:
-                    binary2.Lhs = new Expression(expr);
-                    expr = binary2;
-                    break;
-                default:
-                    throw new Exception("TODO");
-            }
+            if (infixRule == null) throw new Exception("Expected expression");
+            return infixRule(rhsToken, expr);
         }
 
-        return new Expression(expr);
+        return expr;
     }
 
     public static IExpressionKind Number(Token token)
@@ -55,7 +47,7 @@ public partial class Parser
         return new Number(number);
     }
 
-    public static IExpressionKind Binary(Token token)
+    public static IExpressionKind Binary(Token token, IExpressionKind lhs)
     {
         var operatorType = token.Type;
 
@@ -77,6 +69,20 @@ public partial class Parser
             _ => throw new Exception() // TODO
         };
 
-        return new BinaryExpression(op, null, rhs);
+        return new BinaryExpression(op, lhs, rhs);
+    }
+
+    public static IExpressionKind Unary(Token token)
+    {
+        var operatorType = token.Type;
+        var expr = Expression();
+        var op = operatorType switch
+        {
+            TokenType.Minus => UnaryOperator.Negate,
+            TokenType.Bang => UnaryOperator.Not,
+            _ => throw new Exception() // TODO
+        };
+
+        return new UnaryExpression(op, expr);
     }
 }
