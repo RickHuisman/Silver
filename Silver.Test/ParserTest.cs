@@ -12,12 +12,10 @@ public class ParserTest
         const string input = "5 + 10";
         var expected = new List<IExpressionKind>
         {
-            new ExpressionStatement(
-                new BinaryExpression(
-                    BinaryOperator.Plus,
-                    new Number(5),
-                    new Number(10)
-                )
+            new BinaryExpression(
+                BinaryOperator.Plus,
+                new Number(5),
+                new Number(10)
             )
         };
 
@@ -31,11 +29,9 @@ public class ParserTest
         const string input = "-5";
         var expected = new List<IExpressionKind>
         {
-            new ExpressionStatement(
-                new UnaryExpression(
-                    UnaryOperator.Negate,
-                    new Number(5)
-                )
+            new UnaryExpression(
+                UnaryOperator.Negate,
+                new Number(5)
             )
         };
 
@@ -43,20 +39,32 @@ public class ParserTest
         TestHelper.AreEqual(expected, actual);
     }
 
-    // [Test]
-    // public void Parse_SetVar_ReturnsSetVarExpression()
-    // {
-    //     const string input = "x = 10";
-    //     var expected = new List<IExpressionKind>
-    //     {
-    //         new VarStatement(
-    //             new Variable("x"),
-    //             new Expression(new Number(10))
-    //         )
-    //     };
-    //
-    //     var actual = Parser.Parse(input);
-    //
-    //     TestHelper.AreEqual(expected, actual);
-    // }
+    [Test]
+    public void Parse_Identifier_ReturnsExpression()
+    {
+        const string input = "x";
+        var expected = new List<IExpressionKind>
+        {
+            new Identifier("x"),
+        };
+
+        var actual = Parser.Parse(input);
+        TestHelper.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void Parse_SetVariable_ReturnsExpression()
+    {
+        const string input = "x = 10";
+        var expected = new List<IExpressionKind>
+        {
+            new AssignExpression(
+                new Identifier("x"),
+                new Number(10)
+            )
+        };
+
+        var actual = Parser.Parse(input);
+        TestHelper.AreEqual(expected, actual);
+    }
 }

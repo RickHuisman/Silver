@@ -6,7 +6,9 @@ public interface IExpressionKind
 
 public record ExpressionStatement(IExpressionKind Expr) : IExpressionKind;
 
-// public record VarStatement(Variable Variable, Expression Expr) : IExpressionKind; TODO
+public record AssignExpression(IExpressionKind Variable, IExpressionKind Value) : IExpressionKind;
+
+public record Identifier(string Name) : IExpressionKind;
 
 public class BinaryExpression : IExpressionKind
 {

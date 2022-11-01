@@ -38,9 +38,7 @@ public enum TokenType
     False,
     True,
     For,
-    Fun,
     End,
-    Print,
 
     Eof
 }

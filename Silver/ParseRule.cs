@@ -17,28 +17,28 @@ public static class ParserRules
     {
         return new List<ParseRule>
         {
-            new ParseRule(TokenType.Eof, null, null, Precedence.None),
-            new ParseRule(TokenType.Fun, null, null, Precedence.None),
-            new ParseRule(TokenType.RightParen, null, null, Precedence.None),
-            new ParseRule(TokenType.RightBrace, null, null, Precedence.None),
-            new ParseRule(TokenType.Comma, null, null, Precedence.None),
-            new ParseRule(TokenType.Number, Parser.Number, null, Precedence.None),
-            new ParseRule(TokenType.Plus, null, Parser.Binary, Precedence.Term),
-            new ParseRule(TokenType.Minus, Parser.Unary, Parser.Binary, Precedence.Comparison),
-            new ParseRule(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
-            new ParseRule(TokenType.Star, null, Parser.Binary, Precedence.Factor),
-            new ParseRule(TokenType.Semicolon, null, null, Precedence.None),
-            new ParseRule(TokenType.Equal, null, null, Precedence.None),
+            new(TokenType.Eof, null, null, Precedence.None),
+            new(TokenType.RightParen, null, null, Precedence.None),
+            new(TokenType.RightBrace, null, null, Precedence.None),
+            new(TokenType.Comma, null, null, Precedence.None),
+            new(TokenType.Number, Parser.Number, null, Precedence.None),
+            new(TokenType.Plus, null, Parser.Binary, Precedence.Term),
+            new(TokenType.Minus, Parser.Unary, Parser.Binary, Precedence.Term),
+            new(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
+            new(TokenType.Star, null, Parser.Binary, Precedence.Factor),
+            new(TokenType.Semicolon, null, null, Precedence.None),
+            new(TokenType.Identifier, Parser.Identifier, null, Precedence.None),
+            new(TokenType.Equal, null, Parser.ParseAssign, Precedence.Assign),
         };
     }
 }
 
 public class ParseRule
 {
-    public TokenType Type;
-    public Func<Token, IExpressionKind>? Prefix;
-    public Func<Token, IExpressionKind, IExpressionKind>? Infix;
-    public Precedence Precedence;
+    public readonly TokenType Type;
+    public readonly Func<Token, IExpressionKind>? Prefix;
+    public readonly Func<Token, IExpressionKind, IExpressionKind>? Infix;
+    public readonly Precedence Precedence;
 
     public ParseRule(
         TokenType type,

@@ -11,31 +11,36 @@ public partial class Parser
         }
     }
 
-    private static ExpressionStatement ExpressionStatement()
+    private static IExpressionKind ExpressionStatement()
     {
-        var expr = Expression();
-        return new ExpressionStatement(expr);
+        return Expression();
+    }
+
+    public static AssignExpression ParseAssign(Token token, IExpressionKind left)
+    {
+        var value = ExpressionStatement();
+        return new AssignExpression(left, value);
     }
 
     private static IExpressionKind Expression()
     {
-        return ParsePrecedence(Precedence.Assignment);
+        return ParsePrecedence(Precedence.None + 1);
     }
 
     private static IExpressionKind ParsePrecedence(Precedence precedence)
     {
-        var lhsToken = Next();
-        var prefixRule = ParserRules.GetRule(lhsToken.Type).Prefix;
+        var token = Next();
+        var prefixRule = ParserRules.GetRule(token.Type).Prefix;
         if (prefixRule == null) throw new Exception("Expected expression");
 
-        var expr = prefixRule(lhsToken);
+        var expr = prefixRule(token);
 
-        while (precedence < ParserRules.GetRule(PeekType()).Precedence)
+        while (precedence <= ParserRules.GetRule(PeekType()).Precedence)
         {
-            var rhsToken = Next();
-            var infixRule = ParserRules.GetRule(rhsToken.Type).Infix;
+            token = Next();
+            var infixRule = ParserRules.GetRule(token.Type).Infix;
             if (infixRule == null) throw new Exception("Expected expression");
-            return infixRule(rhsToken, expr);
+            return infixRule(token, expr);
         }
 
         return expr;
@@ -45,6 +50,11 @@ public partial class Parser
     {
         var number = Convert.ToDouble(token.Source);
         return new Number(number);
+    }
+
+    public static IExpressionKind Identifier(Token token)
+    {
+        return new Identifier(token.Source);
     }
 
     public static IExpressionKind Binary(Token token, IExpressionKind lhs)

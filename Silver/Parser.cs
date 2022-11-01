@@ -34,15 +34,10 @@ public partial class Parser
 
     private static bool Match(TokenType type)
     {
-        if (!Check(type)) return false;
+        if (PeekType() != type) return false;
 
         Next();
         return true;
-    }
-
-    private static bool Check(TokenType type)
-    {
-        return PeekType() == type;
     }
 
     private static TokenType PeekType()
