@@ -4,12 +4,12 @@ namespace Silver.Syntax.Ast;
 
 public interface IExpressionKind
 {
-    public void Compile(ref Compiler.Compiler compiler);
+    public void Compile(Compiler.Compiler compiler);
 }
 
 public record ExpressionStatement(IExpressionKind Expr) : IExpressionKind
 {
-    public void Compile(ref Compiler.Compiler compiler)
+    public void Compile(Compiler.Compiler compiler)
     {
         throw new NotImplementedException();
     }
@@ -17,7 +17,7 @@ public record ExpressionStatement(IExpressionKind Expr) : IExpressionKind
 
 public record AssignExpression(IExpressionKind Variable, IExpressionKind Value) : IExpressionKind
 {
-    public void Compile(ref Compiler.Compiler compiler)
+    public void Compile(Compiler.Compiler compiler)
     {
         throw new NotImplementedException();
     }
@@ -25,7 +25,7 @@ public record AssignExpression(IExpressionKind Variable, IExpressionKind Value) 
 
 public record Identifier(string Name) : IExpressionKind
 {
-    public void Compile(ref Compiler.Compiler compiler)
+    public void Compile(Compiler.Compiler compiler)
     {
         throw new NotImplementedException();
     }
@@ -49,10 +49,10 @@ public class BinaryExpression : IExpressionKind
         return $"Left: {Left} - Right: {Right} - Operator: {Operator}";
     }
 
-    public void Compile(ref Compiler.Compiler compiler)
+    public void Compile(Compiler.Compiler compiler)
     {
-        Left.Compile(ref compiler);
-        Left.Compile(ref compiler);
+        Left.Compile(compiler);
+        Right.Compile(compiler);
         compiler.Emit(Opcode.Add);
     }
 }
@@ -93,7 +93,7 @@ public class UnaryExpression : IExpressionKind
         return $"Node: {Unary} - Operator: {Operator}";
     }
 
-    public void Compile(ref Compiler.Compiler compiler)
+    public void Compile(Compiler.Compiler compiler)
     {
         throw new NotImplementedException();
     }
@@ -112,7 +112,7 @@ public class SetExpression : IExpressionKind
         Value = value;
     }
 
-    public void Compile(ref Compiler.Compiler compiler)
+    public void Compile(Compiler.Compiler compiler)
     {
         throw new NotImplementedException();
     }
@@ -129,7 +129,7 @@ public class GetExpression : IExpressionKind
         Expr = expr;
     }
 
-    public void Compile(ref Compiler.Compiler compiler)
+    public void Compile(Compiler.Compiler compiler)
     {
         throw new NotImplementedException();
     }

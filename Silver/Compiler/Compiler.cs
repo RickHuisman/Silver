@@ -15,7 +15,7 @@ public class Compiler
         var compiler = new Compiler();
         foreach (var expr in ast)
         {
-            expr.Compile(ref compiler);
+            expr.Compile(compiler);
         }
 
         return compiler._bytecode;

@@ -6,21 +6,21 @@ namespace Silver.Compiler;
 public class Bytecode
 {
     private string Name;
-    private List<byte> Code;
-    private List<IRObjectType> Constants;
+    public List<byte> Code { get; }
+    public List<IRObject> Constants { get; }
 
     public Bytecode()
     {
         Name = "";
         Code = new List<byte>();
-        Constants = new List<IRObjectType>();
+        Constants = new List<IRObject>();
     }
 
     public void Write(Opcode opcode) => Code.Add((byte) opcode);
 
     public void Write(byte b) => Code.Add(b);
 
-    public byte AddConstant(IRObjectType constant)
+    public byte AddConstant(IRObject constant)
     {
         Constants.Add(constant);
         return (byte) (Constants.Count - 1); // TODO: Cast?
