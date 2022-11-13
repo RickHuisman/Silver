@@ -49,6 +49,10 @@ public partial class Parser
 
     private static bool HasNext()
     {
-        return _tokens.Any();
+        if (_tokens.Any())
+        {
+            if (_tokens.Last().Type != TokenType.Eof) return true;
+        }
+        return false;
     }
 }

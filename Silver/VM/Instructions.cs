@@ -15,6 +15,12 @@ public partial class VM
                 case Opcode.Add:
                     Add();
                     break;
+                case Opcode.SetLocal:
+                    SetLocal();
+                    break;
+                case Opcode.GetLocal:
+                    GetLocal();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -32,5 +38,17 @@ public partial class VM
         var b = Pop();
         var a = Pop();
         Push(a.Add(b));
+    }
+
+    private void GetLocal()
+    {
+        var slot = ReadByte();
+        Push(_stack[slot]);
+    }
+    
+    private void SetLocal()
+    {
+        var slot = ReadByte();
+        _stack[slot] = Peek();
     }
 }

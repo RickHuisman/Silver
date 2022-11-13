@@ -20,8 +20,8 @@ public class ParserTest
         var expected = new List<IExpressionKind>
         {
             new BinaryExpression(
-                BinaryOperator.Plus,
                 new Number(5),
+                "+",
                 new Number(10)
             )
         };
@@ -37,7 +37,7 @@ public class ParserTest
         var expected = new List<IExpressionKind>
         {
             new UnaryExpression(
-                UnaryOperator.Negate,
+                "-",
                 new Number(5)
             )
         };

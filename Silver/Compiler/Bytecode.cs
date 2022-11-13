@@ -45,15 +45,14 @@ public class Bytecode
         builder.Append($"{offset:X4} ");
 
         var instruction = (Opcode) Code[offset];
-        switch (instruction)
+        return instruction switch
         {
-            case Opcode.PutObject:
-                return PutInstruction(builder, "putobject", offset);
-            case Opcode.Add:
-                return SimpleInstruction(builder, "add", offset);
-            default:
-                throw new Exception($"Unknown opcode {instruction}");
-        }
+            Opcode.PutObject => PutInstruction(builder, "putobject", offset),
+            Opcode.Add => SimpleInstruction(builder, "add", offset),
+            Opcode.SetLocal => ByteInstruction(builder, "set_local", offset),
+            Opcode.GetLocal => ByteInstruction(builder, "get_local", offset),
+            _ => throw new Exception($"Unknown opcode {instruction}")
+        };
     }
 
     private static int SimpleInstruction(StringBuilder builder, string name, int offset)
@@ -66,6 +65,15 @@ public class Bytecode
     {
         var constant = Code[offset + 1];
         builder.AppendLine($"{name,-16} '{Constants[constant]}'");
+        return offset + 2;
+    }
+
+    private int ByteInstruction(StringBuilder builder, string name, int offset)
+    {
+        var slot = Code[offset + 1];
+
+        var constant = Code[offset + 1];
+        builder.AppendLine($"{name,-16} '{slot}'");
         return offset + 2;
     }
 }

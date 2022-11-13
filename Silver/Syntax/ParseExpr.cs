@@ -9,18 +9,13 @@ public partial class Parser
         switch (PeekType())
         {
             default:
-                return ExpressionStatement();
+                return Expression();
         }
-    }
-
-    private static IExpressionKind ExpressionStatement()
-    {
-        return Expression();
     }
 
     public static AssignExpression ParseAssign(Token token, IExpressionKind left)
     {
-        var value = ExpressionStatement();
+        var value = Expression();
         return new AssignExpression(left, value);
     }
 
@@ -59,42 +54,16 @@ public partial class Parser
         return new Identifier(token.Source);
     }
 
-    public static IExpressionKind Binary(Token token, IExpressionKind lhs)
+    public static IExpressionKind Binary(Token token, IExpressionKind left)
     {
-        var operatorType = token.Type;
-
-        var rule = ParserRules.GetRule(operatorType);
-        var rhs = ParsePrecedence(rule.Precedence + 1);
-
-        var op = operatorType switch
-        {
-            TokenType.BangEqual => BinaryOperator.BangEqual,
-            TokenType.EqualEqual => BinaryOperator.Equal,
-            TokenType.GreaterThan => BinaryOperator.GreaterThan,
-            TokenType.GreaterThanEqual => BinaryOperator.GreaterThanEqual,
-            TokenType.LessThan => BinaryOperator.LessThan,
-            TokenType.LessThanEqual => BinaryOperator.LessThanEqual,
-            TokenType.Plus => BinaryOperator.Plus,
-            TokenType.Minus => BinaryOperator.Minus,
-            TokenType.Star => BinaryOperator.Multiply,
-            TokenType.Slash => BinaryOperator.Divide,
-            _ => throw new Exception() // TODO
-        };
-
-        return new BinaryExpression(op, lhs, rhs);
+        var rule = ParserRules.GetRule(token.Type);
+        var right = ParsePrecedence(rule.Precedence + 1);
+        return new BinaryExpression(left, token.Source, right);
     }
 
     public static IExpressionKind Unary(Token token)
     {
-        var operatorType = token.Type;
-        var expr = Expression();
-        var op = operatorType switch
-        {
-            TokenType.Minus => UnaryOperator.Negate,
-            TokenType.Bang => UnaryOperator.Not,
-            _ => throw new Exception() // TODO
-        };
-
-        return new UnaryExpression(op, expr);
+        var value = Expression();
+        return new UnaryExpression(token.Source, value);
     }
 }

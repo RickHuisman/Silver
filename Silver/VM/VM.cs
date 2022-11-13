@@ -12,12 +12,13 @@ public partial class VM
     {
         _bytecodes = bytecodes;
         Run();
-        Console.WriteLine("foo");
     }
 
     private void Push(IRObject value) => _stack.Push(value);
 
     private IRObject Pop() => _stack.Pop();
+
+    private IRObject Peek() => _stack.Peek();
 
     private byte ReadByte()
     {
@@ -31,6 +32,8 @@ public partial class VM
         var index = ReadByte();
         return CurrentBytecode().Constants[index];
     }
+
+    public IRObject TopValue() => _stack.First();
 
     private Bytecode CurrentBytecode() => _bytecodes.Last();
 }

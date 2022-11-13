@@ -7,19 +7,23 @@ public interface IExpressionKind
     public void Compile(Compiler.Compiler compiler);
 }
 
-public record ExpressionStatement(IExpressionKind Expr) : IExpressionKind
-{
-    public void Compile(Compiler.Compiler compiler)
-    {
-        throw new NotImplementedException();
-    }
-}
-
 public record AssignExpression(IExpressionKind Variable, IExpressionKind Value) : IExpressionKind
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        // Cast to identifier.
+        var identifier = (Identifier) Variable; // TODO: Safe cast?
+
+        compiler.DeclareVariable(identifier.Name);
+
+        Value.Compile(compiler);
+
+        compiler.Emit(Opcode.SetLocal);
+
+        var slot = compiler.ResolveLocal(identifier.Name);
+        if (slot == -1) throw new Exception();
+
+        compiler.Emit((byte) slot);
     }
 }
 
@@ -27,28 +31,16 @@ public record Identifier(string Name) : IExpressionKind
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        var slot = compiler.ResolveLocal(Name);
+        if (slot == -1) throw new Exception();
+
+        compiler.Emit(Opcode.GetLocal);
+        compiler.Emit((byte) slot);
     }
 }
 
-public class BinaryExpression : IExpressionKind
+public record BinaryExpression(IExpressionKind Left, string Operator, IExpressionKind Right) : IExpressionKind
 {
-    public BinaryOperator Operator;
-    public IExpressionKind Left;
-    public IExpressionKind Right;
-
-    public BinaryExpression(BinaryOperator op, IExpressionKind left, IExpressionKind right)
-    {
-        Operator = op;
-        Left = left;
-        Right = right;
-    }
-
-    public override string ToString()
-    {
-        return $"Left: {Left} - Right: {Right} - Operator: {Operator}";
-    }
-
     public void Compile(Compiler.Compiler compiler)
     {
         Left.Compile(compiler);
@@ -57,78 +49,8 @@ public class BinaryExpression : IExpressionKind
     }
 }
 
-public enum BinaryOperator
+public record UnaryExpression(string Operator, IExpressionKind Value) : IExpressionKind
 {
-    Equal,
-    BangEqual,
-    GreaterThan,
-    GreaterThanEqual,
-    LessThan,
-    LessThanEqual,
-    Minus,
-    Plus,
-    Divide,
-    Multiply,
-}
-
-public enum UnaryOperator
-{
-    Negate,
-    Not
-}
-
-public class UnaryExpression : IExpressionKind
-{
-    public UnaryOperator Operator;
-    public IExpressionKind Unary;
-
-    public UnaryExpression(UnaryOperator op, IExpressionKind unary)
-    {
-        Operator = op;
-        Unary = unary;
-    }
-
-    public override string ToString()
-    {
-        return $"Node: {Unary} - Operator: {Operator}";
-    }
-
-    public void Compile(Compiler.Compiler compiler)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-public class SetExpression : IExpressionKind
-{
-    public string Name { get; }
-    public IExpressionKind Expr { get; set; }
-    public IExpressionKind Value { get; } // TODO Name
-
-    public SetExpression(string name, IExpressionKind expr, IExpressionKind value)
-    {
-        Name = name;
-        Expr = expr;
-        Value = value;
-    }
-
-    public void Compile(Compiler.Compiler compiler)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-public class GetExpression : IExpressionKind
-{
-    public string Name { get; }
-    public IExpressionKind Expr { get; set; }
-
-    public GetExpression(string name, IExpressionKind expr)
-    {
-        Name = name;
-        Expr = expr;
-    }
-
     public void Compile(Compiler.Compiler compiler)
     {
         throw new NotImplementedException();
