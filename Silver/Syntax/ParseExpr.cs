@@ -8,9 +8,44 @@ public partial class Parser
     {
         switch (PeekType())
         {
+            case TokenType.Def:
+                return ParseDef();
             default:
                 return Expression();
         }
+    }
+
+    private static IExpressionKind ParseDef()
+    {
+        Consume(TokenType.Def, "TODO");
+
+        var identifier = Consume(TokenType.Identifier, "TODO");
+        var name = ParseIdentifier(identifier);
+
+        var parameters = ParseParameters();
+        var body = ParseBlock();
+
+        return new DefExpression(name, parameters, body);
+    }
+
+    private static IList<IExpressionKind> ParseParameters()
+    {
+        // TODO: Parse arguments.
+        Consume(TokenType.LeftParen, "TODO");
+        Consume(TokenType.RightParen, "TODO");
+        return new List<IExpressionKind>();
+    }
+
+    private static IList<IExpressionKind> ParseBlock()
+    {
+        var block = new List<IExpressionKind>();
+        while (!Check(TokenType.End, TokenType.Eof))
+        {
+            block.Add(ParseExpression());
+        }
+        
+        Consume(TokenType.End, "TODO");
+        return block;
     }
 
     public static AssignExpression ParseAssign(Token token, IExpressionKind left)
@@ -49,7 +84,7 @@ public partial class Parser
         return new Number(number);
     }
 
-    public static IExpressionKind Identifier(Token token)
+    public static IExpressionKind ParseIdentifier(Token token)
     {
         return new Identifier(token.Source);
     }

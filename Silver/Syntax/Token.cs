@@ -35,9 +35,7 @@ public enum TokenType
     Number,
 
     // Keywords
-    False,
-    True,
-    For,
+    Def,
     End,
 
     Eof
@@ -49,6 +47,8 @@ public static class TokenTypeTranslator
     {
         return str switch
         {
+            "def" => TokenType.Def,
+            "end" => TokenType.End,
             _ => TokenType.Identifier
         };
     }

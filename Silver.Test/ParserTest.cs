@@ -74,4 +74,30 @@ public class ParserTest
         var actual = LexAndParse(input);
         TestHelper.AreEqual(expected, actual);
     }
+
+    [Test]
+    public void Parse_Def_ReturnsExpression()
+    {
+        const string input = @"
+def foobar()
+  1 + 1
+end";
+        var expected = new List<IExpressionKind>
+        {
+            new DefExpression(
+                new Identifier("foobar"),
+                new List<IExpressionKind>(),
+                new List<IExpressionKind>
+                {
+                    new BinaryExpression(
+                        new Number(1),
+                        "+",
+                        new Number(1))
+                }
+            )
+        };
+
+        var actual = LexAndParse(input);
+        TestHelper.AreEqual(expected, actual);
+    }
 }

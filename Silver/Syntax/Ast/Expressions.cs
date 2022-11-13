@@ -7,6 +7,18 @@ public interface IExpressionKind
     public void Compile(Compiler.Compiler compiler);
 }
 
+public record DefExpression(
+    IExpressionKind Name,
+    // IExpressionKind Receiver,
+    IList<IExpressionKind> Parameters,
+    IList<IExpressionKind> Body) : IExpressionKind
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public record AssignExpression(IExpressionKind Variable, IExpressionKind Value) : IExpressionKind
 {
     public void Compile(Compiler.Compiler compiler)

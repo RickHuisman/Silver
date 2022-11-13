@@ -34,6 +34,11 @@ public partial class Parser
         throw new Exception(message);
     }
 
+    private static bool Check(params TokenType[] types)
+    {
+        return types.Any(t => PeekType() == t);
+    }
+
     private static bool Match(TokenType type)
     {
         if (PeekType() != type) return false;

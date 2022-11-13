@@ -27,6 +27,20 @@ x + y
         Run(input, expected);
     }
 
+    [Test]
+    public void VM_Def()
+    {
+        const string input = @"
+def foobar()
+  5
+end
+
+foobar()
+";
+        var expected = new IRObjectInt(5);
+        Run(input, expected);
+    }
+
     private static void Run(string input, IRObjectInt expected)
     {
         var bytecode = Compiler.Compiler.Compile(input);

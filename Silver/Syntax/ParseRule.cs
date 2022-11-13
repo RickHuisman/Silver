@@ -20,6 +20,7 @@ public static class ParserRules
         return new List<ParseRule>
         {
             new(TokenType.Eof, null, null, Precedence.None),
+            new(TokenType.End, null, null, Precedence.None),
             new(TokenType.RightParen, null, null, Precedence.None),
             new(TokenType.RightBrace, null, null, Precedence.None),
             new(TokenType.Comma, null, null, Precedence.None),
@@ -29,7 +30,7 @@ public static class ParserRules
             new(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
             new(TokenType.Star, null, Parser.Binary, Precedence.Factor),
             new(TokenType.Semicolon, null, null, Precedence.None),
-            new(TokenType.Identifier, Parser.Identifier, null, Precedence.None),
+            new(TokenType.Identifier, Parser.ParseIdentifier, null, Precedence.None),
             new(TokenType.Equal, null, Parser.ParseAssign, Precedence.Assign),
         };
     }
